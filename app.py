@@ -9,8 +9,9 @@ st.set_page_config(page_title="Movie Recommender", layout="centered")
 @st.cache_data(show_spinner=False)
 def load_data():
     # adjust filenames if yours are named differently
-    movies = pd.read_csv("data/tmdb_5000_movies.csv")
-    credits = pd.read_csv("data/tmdb_5000_credits.csv")
+    movies = pd.read_csv("tmdb_5000_movies.csv")
+    credits = pd.read_csv("tmdb_5000_credits.csv")
+
     # try to merge on id / movie_id if both files present
     if 'movie_id' in credits.columns and 'id' in movies.columns:
         movies = movies.merge(credits, left_on='id', right_on='movie_id', how='left')
@@ -34,6 +35,7 @@ def build_sim_matrix(texts):
     return sim
 
 movies = load_data()
+st.write("COLUMNS:", movies.columns.tolist())
 sim_matrix = build_sim_matrix(movies['tags'].astype(str))
 
 def get_recommendations(title, top_n=10):
